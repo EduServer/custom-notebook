@@ -84,7 +84,7 @@ define(['base/js/namespace'], function(Jupyter){
     Jupyter._target = '_self';
 });
 
-define(['base/js/namespace'], function(Jupyter){
+define(function(){
     function _on_load(){
         console.info('iframe extension running!')
         window.addEventListener('message', function(event){
