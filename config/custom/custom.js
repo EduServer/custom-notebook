@@ -83,4 +83,28 @@
 define(['base/js/namespace'], function(Jupyter){
     Jupyter._target = '_self';
 });
-console.log("This is custom Javascript File.")
+
+define(['base/js/namespace'], function(Jupyter){
+    function _on_load(){
+        console.info('iframe extension running!')
+        window.addEventListener('message', function(event){
+            console.log("the iframe get:"+event.data);
+            if(event.data == 'save-notebook'){
+                Jupyter.notebook.save_notebook();
+            }
+            else if(event.data == 'scroll-top'){
+                Jupyter.notebook.scroll_to_top();
+            }
+            else if(event.data == 'scroll-bottom'){
+                Jupyter.notebook.scroll_to_bottom();
+            }
+            else{
+                console.log("Unrecognized command!");
+            }
+            window.parent.postMessage("data from  iframe extension",'*');
+        })
+    }
+
+    return {load_ipython_extension: _on_load };
+});
+console.log("This is Custom JS!")
