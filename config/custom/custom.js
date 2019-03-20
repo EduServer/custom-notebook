@@ -105,6 +105,7 @@ window.addEventListener('message', function(event){
     }
     else if(event.data == 'export-html'){
         // alert("export-HTML");
+        var download = true;
         var url = Jupyter.utils.url_path_join(
             Jupyter.notebook.base_url,
             'nbconvert',
@@ -122,6 +123,7 @@ window.addEventListener('message', function(event){
     }
     else if(event.data == 'export-notebook'){
         // alert("export-notebook")
+        var download = true;
         var url = Jupyter.utils.url_path_join(
             Jupyter.notebook.base_url,
             'nbconvert',
