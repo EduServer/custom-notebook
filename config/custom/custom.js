@@ -87,47 +87,45 @@ define(['base/js/namespace'], function(Jupyter){
 window.addEventListener('message', function(event){
     // Will print message continuously ???
     if(event.origin !== 'http://192.168.3.80:8000') return;
-    console.log("the iframe get:"+event.data);
-    if(event.data == 'save-notebook'){
+    // For test
+    console.log("the iframe get:" + event.data);
+
+    var act = event.data.actions;
+    var msg = event.data.msg;
+    // Switch to the event
+    if(act == 'save-notebook') {
         Jupyter.notebook.save_notebook();
     }
-    else if(event.data == 'scroll-top'){
+    else if(act == 'scroll-top') {
         Jupyter.notebook.scroll_to_top();
     }
-    else if(event.data == 'scroll-bottom'){
+    else if(act == 'scroll-bottom') {
         Jupyter.notebook.scroll_to_bottom();
     }
-    else if(event.data == 'shutdown-kernel'){
+    else if(act == 'shutdown-kernel') {
         Jupyter.notebook.shutdown_kernel();
     }
-    else if(event.data == 'start-kernel'){
+    else if(act == 'start-kernel') {
         Jupyter.notebook.start_session();
     }
-    else if(event.data == 'export-html'){
-        // alert("export-HTML");
-        var download = true;
-        var url = Jupyter.utils.url_path_join(
-            Jupyter.notebook.base_url,
-            'nbconvert',
-            'html',
-            Jupyter.utils.encode_uri_components(Jupyter.notebook.notebook_path)
-        ) + "?download=" + download.toString()
-        var w = window.open('', IPython._target);
-        if (Jupyter.notebook.dirty && Jupyter.notebook.writable) {
-            Jupyter.notebook.save_notebook().then(function() {
-                w.location = url;
-            });
-        } else {
-            w.location = url;
+    else if(act == "scroll-heading") {
+        var ncs = Jupyter.notebook.ncells();
+        for (var i = 0; i < ncs; i++) {
+            icell = Jupyter.notebook.get_cell(1);
+            if (icell.cell_type == 'markdown' && icell.get_text().includes(msg)){
+                Jupyter.notebook.scroll_to_cell(i);
+                break;
+            }
         }
     }
-    else if(event.data == 'export-notebook'){
-        // alert("export-notebook")
+    else if(act.substring(0, 6) == 'export') {
+        var format = event.data.substring(7)
+        // false for preview
         var download = true;
         var url = Jupyter.utils.url_path_join(
             Jupyter.notebook.base_url,
             'nbconvert',
-            'ipynb',
+            format,
             Jupyter.utils.encode_uri_components(Jupyter.notebook.notebook_path)
         ) + "?download=" + download.toString()
         var w = window.open('', IPython._target);
