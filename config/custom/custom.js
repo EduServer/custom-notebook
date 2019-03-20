@@ -87,11 +87,11 @@ define(['base/js/namespace'], function(Jupyter){
 window.addEventListener('message', function(event){
     // Will print message continuously ???
     if(event.origin !== 'http://192.168.3.80:8000') return;
-    // For test
-    console.log("the iframe get:" + event.data);
-
+    
     var act = event.data.actions;
     var msg = event.data.msg;
+    // For test
+    console.log("the iframe get: " + act + " " + msg);
     // Switch to the event
     if(act == 'save-notebook') {
         Jupyter.notebook.save_notebook();
@@ -108,10 +108,10 @@ window.addEventListener('message', function(event){
     else if(act == 'start-kernel') {
         Jupyter.notebook.start_session();
     }
-    else if(act == "scroll-heading") {
+    else if(act == 'scroll-heading') {
         var ncs = Jupyter.notebook.ncells();
         for (var i = 0; i < ncs; i++) {
-            icell = Jupyter.notebook.get_cell(1);
+            icell = Jupyter.notebook.get_cell(i);
             if (icell.cell_type == 'markdown' && icell.get_text().includes(msg)){
                 Jupyter.notebook.scroll_to_cell(i);
                 break;
@@ -119,7 +119,7 @@ window.addEventListener('message', function(event){
         }
     }
     else if(act.substring(0, 6) == 'export') {
-        var format = event.data.substring(7)
+        var format = act.substring(7)
         // false for preview
         var download = true;
         var url = Jupyter.utils.url_path_join(
