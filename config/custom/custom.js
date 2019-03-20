@@ -101,10 +101,41 @@ window.addEventListener('message', function(event){
         Jupyter.notebook.shutdown_kernel();
     }
     else if(event.data == 'start-kernel'){
-        Jupyter.notebook.kernel_reconnect();
+        Jupyter.notebook.start_session();
     }
     else if(event.data == 'export-html'){
-        alert("export-HTML")
+        // alert("export-HTML");
+        var url = Jupyter.utils.url_path_join(
+            Jupyter.notebook.base_url,
+            'nbconvert',
+            'html',
+            Jupyter.utils.encode_uri_components(Jupyter.notebook.notebook_path)
+        ) + "?download=" + download.toString()
+        var w = window.open('', IPython._target);
+        if (Jupyter.notebook.dirty && Jupyter.notebook.writable) {
+            Jupyter.notebook.save_notebook().then(function() {
+                w.location = url;
+            });
+        } else {
+            w.location = url;
+        }
+    }
+    else if(event.data == 'export-notebook'){
+        // alert("export-notebook")
+        var url = Jupyter.utils.url_path_join(
+            Jupyter.notebook.base_url,
+            'nbconvert',
+            'ipynb',
+            Jupyter.utils.encode_uri_components(Jupyter.notebook.notebook_path)
+        ) + "?download=" + download.toString()
+        var w = window.open('', IPython._target);
+        if (Jupyter.notebook.dirty && Jupyter.notebook.writable) {
+            Jupyter.notebook.save_notebook().then(function() {
+                w.location = url;
+            });
+        } else {
+            w.location = url;
+        }
     }
     else{
         console.log("Unrecognized command!");
