@@ -97,6 +97,15 @@ window.addEventListener('message', function(event){
     else if(event.data == 'scroll-bottom'){
         Jupyter.notebook.scroll_to_bottom();
     }
+    else if(event.data == 'shutdown-kernel'){
+        Jupyter.notebook.shutdown_kernel();
+    }
+    else if(event.data == 'start-kernel'){
+        Jupyter.notebook.kernel_reconnect();
+    }
+    else if(event.data == 'export-html'){
+        alert("export-HTML")
+    }
     else{
         console.log("Unrecognized command!");
     }
