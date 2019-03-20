@@ -85,6 +85,8 @@ define(['base/js/namespace'], function(Jupyter){
 });
 
 window.addEventListener('message', function(event){
+    // Will print message continuously ???
+    if(event.origin !== 'http://192.168.3.80:8000') return;
     console.log("the iframe get:"+event.data);
     if(event.data == 'save-notebook'){
         Jupyter.notebook.save_notebook();
@@ -98,7 +100,7 @@ window.addEventListener('message', function(event){
     else{
         console.log("Unrecognized command!");
     }
-    window.parent.postMessage("data from iframe extension",'*');
-});
+    window.parent.postMessage("data from iframe extension", '*');
+}, false);
 
 console.log("This is Custom JS!")
