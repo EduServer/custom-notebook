@@ -167,10 +167,10 @@ navbar = {
             for (j = diff; j < 0; j ++) {
                 txt = close_tag + txt;
             }
-            prev_level = level
-            all_txt += txt
+            prev_level = level;
+            all_txt += txt;
         }
-        all_txt += close_tag
+        if(hs.length > 0) all_txt += close_tag;
         return all_txt;
     },
 
