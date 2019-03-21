@@ -159,7 +159,7 @@ navbar = {
         for (i = 0; i < hs.length; i ++) {
             x = hs[i];
             level = parseInt(x.tagName.substr(1));
-            txt = "<li><a href='#'>" + x.innerText.replace(/¶$/, '') + "</a>" + "<p>" + x.innerText.replace(/¶$/, '') + "</p>" + "</li>";
+            txt = "<li>" + x.innerText.replace(/¶$/, '') + "</li>";
             diff = level - prev_level;
             for (j = 0;j < diff; j ++) {
                 txt = open_tag + txt;
