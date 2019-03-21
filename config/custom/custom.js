@@ -80,64 +80,77 @@
  * @class customjs
  * @static
  */
-window.addEventListener('message', function(event){
-    // Will print message continuously ???
-    if(event.origin !== 'http://192.168.3.80:8000') return;
-    
-    var act = event.data.actions;
-    var msg = event.data.msg;
-    // For test
-    console.log("the iframe get: " + act + " " + msg);
-    // Switch to the event
-    if(act == 'save-notebook') {
-        Jupyter.notebook.save_notebook();
-    }
-    else if(act == 'scroll-top') {
-        Jupyter.notebook.scroll_to_top();
-    }
-    else if(act == 'scroll-bottom') {
-        Jupyter.notebook.scroll_to_bottom();
-    }
-    else if(act == 'shutdown-kernel') {
-        Jupyter.notebook.shutdown_kernel();
-    }
-    else if(act == 'start-kernel') {
-        Jupyter.notebook.start_session();
-    }
-    else if(act == 'scroll-heading') {
-        var ncs = Jupyter.notebook.ncells();
-        for (var i = 0; i < ncs; i++) {
-            icell = Jupyter.notebook.get_cell(i);
-            if (icell.cell_type == 'markdown' && icell.get_text().includes(msg)){
-                Jupyter.notebook.scroll_to_cell(i);
-                break;
-            }
-        }
-    }
-    else if(act.substring(0, 6) == 'export') {
-        var format = act.substring(7)
-        // false for preview
-        var download = true;
-        var url = Jupyter.utils.url_path_join(
-            Jupyter.notebook.base_url,
-            'nbconvert',
-            format,
-            Jupyter.utils.encode_uri_components(Jupyter.notebook.notebook_path)
-        ) + "?download=" + download.toString()
-        var w = window.open('', IPython._target);
-        if (Jupyter.notebook.dirty && Jupyter.notebook.writable) {
-            Jupyter.notebook.save_notebook().then(function() {
-                w.location = url;
-            });
-        } else {
-            w.location = url;
-        }
-    }
-    else{
-        console.log("Unrecognized command!");
-    }
-    // window.parent.postMessage("data from iframe extension", '*');
-}, false);
+actions = {
+    add_listeners: function() {
+        requirejs(['base/js/utils'], function (utils) {
+            window.addEventListener('message', function(event){
+                // Will print message continuously ???
+                if(event.origin !== 'http://192.168.3.80:8000') return;
+                
+                var act = event.data.actions;
+                var msg = event.data.msg;
+                // For test
+                console.log("the iframe get: " + act + " " + msg);
+                // Switch to the event
+                if(act == 'save-notebook') {
+                    Jupyter.notebook.save_notebook();
+                }
+                else if(act == 'scroll-top') {
+                    Jupyter.notebook.scroll_to_top();
+                }
+                else if(act == 'scroll-bottom') {
+                    Jupyter.notebook.scroll_to_bottom();
+                }
+                else if(act == 'shutdown-kernel') {
+                    Jupyter.notebook.shutdown_kernel();
+                }
+                else if(act == 'start-kernel') {
+                    Jupyter.notebook.start_session();
+                }
+                else if(act == 'scroll-heading') {
+                    var ncs = Jupyter.notebook.ncells();
+                    for (var i = 0; i < ncs; i++) {
+                        icell = Jupyter.notebook.get_cell(i);
+                        if (icell.cell_type == 'markdown' && icell.get_text().includes(msg)){
+                            Jupyter.notebook.scroll_to_cell(i);
+                            break;
+                        }
+                    }
+                }
+                else if(act.substring(0, 6) == 'export') {
+                    var format = act.substring(7)
+                    // false for preview
+                    var download = true;
+                    var url = utils.url_path_join(
+                        Jupyter.notebook.base_url,
+                        'nbconvert',
+                        format,
+                        utils.encode_uri_components(Jupyter.notebook.notebook_path)
+                    ) + "?download=" + download.toString()
+                    var w = window.open('', IPython._target);
+                    if (Jupyter.notebook.dirty && Jupyter.notebook.writable) {
+                        Jupyter.notebook.save_notebook().then(function() {
+                            w.location = url;
+                        });
+                    } else {
+                        w.location = url;
+                    }
+                }
+                else{
+                    console.log("Unrecognized command!");
+                }
+                // window.parent.postMessage("data from iframe extension", '*');
+            }, false);
+        });
+    },
+
+    init: function() {
+        requirejs(['base/js/events'], function (events) {
+            events.one('app_initialized.NotebookApp', actions.add_listeners);
+        });
+    },
+};
+
 
 // functions for get Table of Content in ipynb
 navbar = {
@@ -155,7 +168,7 @@ navbar = {
         var close_tag = '</' + navbar.list_tag + '>';
         var all_txt = '';
         var prev_level = 0;
-        var hs = $('.text_cell_render').find('h1,h2,h3,h4,h5');
+        var hs = $('.text_cell_render').find('h1,h2,h3');
         for (i = 0; i < hs.length; i ++) {
             x = hs[i];
             level = parseInt(x.tagName.substr(1));
@@ -195,6 +208,8 @@ navbar = {
         });
     },
 }
+
+actions.init();
 
 navbar.init();
 
