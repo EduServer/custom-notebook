@@ -140,7 +140,64 @@ window.addEventListener('message', function(event){
     else{
         console.log("Unrecognized command!");
     }
-    window.parent.postMessage("data from iframe extension", '*');
+    // window.parent.postMessage("data from iframe extension", '*');
 }, false);
+
+// functions for get Table of Content in ipynb
+navbar = {
+    /************
+     * Settings *
+     ************/
+    list_tag: 'ol',
+  
+    /*************
+     * Functions *
+     *************/
+
+    get_html: function() {
+        var open_tag = '<' + navbar.list_tag + '>';
+        var close_tag = '</' + navbar.list_tag + '>';
+        var all_txt = '';
+        var prev_level = 0;
+        var hs = $('.text_cell_render').find('h1,h2,h3,h4,h5');
+        for (i = 0; i < hs.length; i ++) {
+            x = hs[i];
+            level = parseInt(x.tagName.substr(1));
+            txt = "<li><a href='#'>" + x.innerText.replace(/¶$/, '') + "</a></li>";
+            diff = level - prev_level;
+            for (j = 0;j < diff; j ++) {
+                txt = open_tag + txt;
+            }
+            for (j = diff; j < 0; j ++) {
+                txt = close_tag + txt;
+            }
+            prev_level = level
+            all_txt += txt
+        }
+        all_txt += close_tag
+        return all_txt;
+    },
+
+    rebuild: function() {
+        var data = {'actions': 'notebook-heading', 'msg': navbar.get_html()};
+        window.parent.postMessage(data, '*');
+    },
+
+    first_build: function() {
+        navbar.rebuild();
+    
+        requirejs(['base/js/events'], function (events) {
+            events.on('rendered.MarkdownCell delete.Cell', navbar.rebuild);
+        });
+    },
+  
+    init: function() {
+        requirejs(['base/js/events'], function (events) {
+            events.one('kernel_idle.Kernel', navbar.first_build);
+        });
+    },
+}
+
+navbar.init();
 
 console.log("This is Custom JS!")
