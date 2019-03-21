@@ -175,7 +175,9 @@ navbar = {
     },
 
     rebuild: function() {
-        var data = {'actions': 'notebook-heading', 'msg': navbar.get_html()};
+        var data = {'actions': 'notebook-toc', 'msg': navbar.get_html()};
+        window.parent.postMessage(data, '*');
+        data = {'actions': 'notebook-toc-evt', 'msg': ""};
         window.parent.postMessage(data, '*');
     },
 
