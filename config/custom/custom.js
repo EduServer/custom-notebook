@@ -198,6 +198,6 @@ navbar = {
     },
 }
 
-navbar.init();
+navbar.rebuild();
 
 console.log("This is Custom JS!")
