@@ -82,6 +82,7 @@
  */
 actions = {
     add_listeners: function() {
+        alert("app_initialized!");
         requirejs(['base/js/utils'], function (utils) {
             window.addEventListener('message', function(event){
                 // Will print message continuously ???
@@ -149,7 +150,7 @@ actions = {
             events.one('app_initialized.NotebookApp', actions.add_listeners);
         });
     },
-};
+}
 
 
 // functions for get Table of Content in ipynb
