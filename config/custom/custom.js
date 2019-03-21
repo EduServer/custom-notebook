@@ -80,10 +80,6 @@
  * @class customjs
  * @static
  */
-define(['base/js/namespace'], function(Jupyter){
-    Jupyter._target = '_self';
-});
-
 window.addEventListener('message', function(event){
     // Will print message continuously ???
     if(event.origin !== 'http://192.168.3.80:8000') return;
@@ -200,4 +196,6 @@ navbar = {
 
 navbar.init();
 
-console.log("This is Custom JS!")
+define(['base/js/namespace'], function(Jupyter){
+    Jupyter._target = '_self';
+});
