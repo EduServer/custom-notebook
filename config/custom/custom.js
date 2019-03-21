@@ -148,7 +148,7 @@ navbar = {
     /************
      * Settings *
      ************/
-    list_tag: 'ol',
+    list_tag: 'ul',
   
     /*************
      * Functions *
@@ -163,7 +163,7 @@ navbar = {
         for (i = 0; i < hs.length; i ++) {
             x = hs[i];
             level = parseInt(x.tagName.substr(1));
-            txt = "<li><a href='#'>" + x.innerText.replace(/¶$/, '') + "</a></li>";
+            txt = "<li><a href='javascript()'>" + x.innerText.replace(/¶$/, '') + "</a></li>";
             diff = level - prev_level;
             for (j = 0;j < diff; j ++) {
                 txt = open_tag + txt;
