@@ -82,7 +82,6 @@
  */
 actions = {
     add_listeners: function() {
-        alert("app_initialized!");
         requirejs(['base/js/utils'], function (utils) {
             window.addEventListener('message', function(event){
                 // Will print message continuously ???
@@ -147,7 +146,7 @@ actions = {
 
     init: function() {
         requirejs(['base/js/events'], function (events) {
-            events.one('app_initialized.NotebookApp', actions.add_listeners);
+            events.one('kernel_idle.Kernel', actions.add_listeners);
         });
     },
 }
