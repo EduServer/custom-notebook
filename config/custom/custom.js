@@ -83,10 +83,7 @@
 actions = {
     add_listeners: function() {
         requirejs(['base/js/utils'], function (utils) {
-            window.addEventListener('message', function(event){
-                // Will print message continuously ???
-                if(event.origin !== 'http://192.168.3.80:8000') return;
-                
+            window.addEventListener('message', function(event){                
                 var act = event.data.actions;
                 var msg = event.data.msg;
                 // For test
@@ -158,7 +155,7 @@ navbar = {
      * Settings *
      ************/
     list_tag: 'ul',
-  
+    
     /*************
      * Functions *
      *************/

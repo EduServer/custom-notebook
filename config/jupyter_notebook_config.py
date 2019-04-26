@@ -343,7 +343,7 @@ c.NotebookApp.open_browser = False
 #  uses.
 c.NotebookApp.tornado_settings = {
 'headers': {
-'Content-Security-Policy': "frame-ancestors 'self' http://192.168.3.80:8000"
+'Content-Security-Policy': "frame-ancestors 'self' http://39.100.66.38:*"
 }
 }
 
