@@ -265,7 +265,3 @@ navbar.init();
 define(['base/js/namespace'], function(Jupyter){
     Jupyter._target = '_self';
 });
-
-window.onload = function(){
-    op_dom.ele_delete_after();
-};
