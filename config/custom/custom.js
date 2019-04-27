@@ -83,9 +83,10 @@
 actions = {
     add_listeners: function() {
         requirejs(['base/js/utils'], function (utils) {
-            window.addEventListener('message', function(event){                
+            window.addEventListener('message', function(event){
                 var act = event.data.actions;
                 var msg = event.data.msg;
+                if(typeof(act) == "undefined") return;
                 // For test
                 console.log("the iframe get: " + act + " " + msg);
                 // Switch to the event
@@ -205,6 +206,36 @@ navbar = {
         });
     },
 }
+
+// functions for removing elements from DOM of page in Jupyter Notebook
+op_dom = {
+    /************
+     * Settings *
+     ************/
+    is_active: true,
+    
+    /*************
+     * Functions *
+     *************/
+
+    ele_delete: function() {
+        if(!is_active) return;
+        // Buttons in `file`
+        $("#file_menu").parent().remove();
+        // Buttons in `view`
+        $("#toggle_header").remove();
+        // Buttons in `widget`
+        $("#widget-submenu").parent().remove();
+        // Buttons in `help`
+        $("#notebook_tour").remove();
+        $("#keyboard_shortcuts").remove();
+        $("#edit_keyboard_shortcuts").remove();
+        $("#help_menu").children()[0].remove();
+    },
+
+}
+
+op_dom.ele_delete();
 
 actions.init();
 
