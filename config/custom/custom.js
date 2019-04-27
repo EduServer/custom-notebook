@@ -80,6 +80,44 @@
  * @class customjs
  * @static
  */
+ // functions for removing elements from DOM of page in Jupyter Notebook
+op_dom = {
+    /************
+     * Settings *
+     ************/
+    is_active: true,
+    
+    /*************
+     * Functions *
+     *************/
+
+    ele_delete: function() {
+        if(!op_dom.is_active) return;
+        // Buttons in `file`
+        $("#file_menu").parent().remove();
+        // Buttons in `view`
+        $("#toggle_header").remove();
+        // Buttons in `help`
+        $("#notebook_tour").remove();
+        $("#keyboard_shortcuts").remove();
+        $("#edit_keyboard_shortcuts").remove();
+        $("#help_menu").children()[0].remove();
+    },
+
+    ele_delete_after: function() {
+        if(!op_dom.is_active) return;
+        // Buttons in `widget`
+        // Due to a delay loading of the widget,
+        // the DOM related to widget must be deleted
+        // via postMessage from other origin.
+        $("#widget-submenu").parent().remove();
+    },
+
+    init: function() {
+        op_dom.ele_delete();
+    },
+}
+
 actions = {
     add_listeners: function() {
         requirejs(['base/js/namespace', 'base/js/utils'], function (Jupyter, utils) {
@@ -134,6 +172,9 @@ actions = {
                         w.location = url;
                     }
                 }
+                else if(act == 'delete-dom') {
+                    op_dom.ele_delete_after();
+                }
                 else{
                     console.log("Unrecognized command!");
                 }
@@ -144,7 +185,7 @@ actions = {
 
     init: function() {
         requirejs(['base/js/events'], function (events) {
-            events.one('notebook_loaded.Notebook', actions.add_listeners);
+            events.one('kernel_connected.Kernel', actions.add_listeners);
         });
     },
 }
@@ -207,49 +248,6 @@ navbar = {
     },
 }
 
-// functions for removing elements from DOM of page in Jupyter Notebook
-op_dom = {
-    /************
-     * Settings *
-     ************/
-    is_active: true,
-    
-    /*************
-     * Functions *
-     *************/
-
-    ele_delete: function() {
-        if(!op_dom.is_active) return;
-        // Buttons in `file`
-        $("#file_menu").parent().remove();
-        // Buttons in `view`
-        $("#toggle_header").remove();
-        // Buttons in `help`
-        $("#notebook_tour").remove();
-        $("#keyboard_shortcuts").remove();
-        $("#edit_keyboard_shortcuts").remove();
-        $("#help_menu").children()[0].remove();
-    },
-
-    ele_delete_after: function() {
-        if(!op_dom.is_active) return;
-        // Buttons in `widget`
-        $("#widget-submenu").parent().remove();
-    },
-
-    build_delete: function() {
-        requirejs(['base/js/events'], function (events) {
-            events.one('notebook_loaded.Notebook', op_dom.ele_delete_after);
-        });
-    },
-
-    init: function() {
-        op_dom.ele_delete();
-        // oriented for loaded doms after app initializing.
-        op_dom.build_delete();
-    },
-}
-
 op_dom.init();
 
 actions.init();
@@ -258,4 +256,8 @@ navbar.init();
 
 define(['base/js/namespace'], function(Jupyter){
     Jupyter._target = '_self';
+});
+
+$(document).ready(function(){
+    op_dom.ele_delete_after();
 });
