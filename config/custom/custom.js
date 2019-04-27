@@ -224,8 +224,6 @@ op_dom = {
         $("#file_menu").parent().remove();
         // Buttons in `view`
         $("#toggle_header").remove();
-        // Buttons in `widget`
-        $("#widget-submenu").parent().remove();
         // Buttons in `help`
         $("#notebook_tour").remove();
         $("#keyboard_shortcuts").remove();
@@ -233,9 +231,26 @@ op_dom = {
         $("#help_menu").children()[0].remove();
     },
 
+    ele_delete_after: function() {
+        if(!op_dom.is_active) return;
+        // Buttons in `widget`
+        $("#widget-submenu").parent().remove();
+    },
+
+    build_delete: function() {
+        requirejs(['base/js/events'], function (events) {
+            events.on('app_initialized.DashboardApp', op_dom.ele_delete_after);
+        });
+    },
+
+    init: function() {
+        op_dom.ele_delete();
+        // oriented for loaded doms after app initializing.
+        op_dom.build_delete();
+    },
 }
 
-op_dom.ele_delete();
+op_dom.init();
 
 actions.init();
 
