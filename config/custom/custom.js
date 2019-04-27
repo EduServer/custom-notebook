@@ -219,7 +219,7 @@ op_dom = {
      *************/
 
     ele_delete: function() {
-        if(!is_active) return;
+        if(!op_dom.is_active) return;
         // Buttons in `file`
         $("#file_menu").parent().remove();
         // Buttons in `view`
