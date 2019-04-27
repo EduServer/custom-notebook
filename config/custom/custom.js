@@ -143,10 +143,8 @@ actions = {
     },
 
     init: function() {
-        requirejs(['base/js/namespace', 'base/js/events'], function (Jupyter, events) {
-            Jupyter.notebook.notebook_ready.then(function(){
-                actions.add_listeners();
-            });
+        requirejs(['base/js/events'], function (events) {
+            events.one('notebook_loaded.Notebook', actions.add_listeners);
         });
     },
 }
@@ -240,10 +238,8 @@ op_dom = {
     },
 
     build_delete: function() {
-        requirejs(['base/js/namespace', 'base/js/events'], function (Jupyter, events) {
-            Jupyter.notebook.notebook_ready.then(function(){
-                op_dom.ele_delete_after();
-            });
+        requirejs(['base/js/events'], function (events) {
+            events.one('notebook_loaded.Notebook', op_dom.ele_delete_after);
         });
     },
 
