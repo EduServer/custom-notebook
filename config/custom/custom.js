@@ -82,7 +82,7 @@
  */
 actions = {
     add_listeners: function() {
-        requirejs(['base/js/utils'], function (utils) {
+        requirejs(['base/js/namespace', 'base/js/utils'], function (Jupyter, utils) {
             window.addEventListener('message', function(event){
                 var act = event.data.actions;
                 var msg = event.data.msg;
@@ -143,8 +143,10 @@ actions = {
     },
 
     init: function() {
-        requirejs(['base/js/events'], function (events) {
-            events.one('kernel_idle.Kernel', actions.add_listeners);
+        requirejs(['base/js/namespace', 'base/js/events'], function (Jupyter, events) {
+            Jupyter.notebook.notebook_ready.then(function(){
+                actions.add_listeners();
+            });
         });
     },
 }
@@ -238,8 +240,10 @@ op_dom = {
     },
 
     build_delete: function() {
-        requirejs(['base/js/events'], function (events) {
-            events.on('app_initialized.DashboardApp', op_dom.ele_delete_after);
+        requirejs(['base/js/namespace', 'base/js/events'], function (Jupyter, events) {
+            Jupyter.notebook.notebook_ready.then(function(){
+                op_dom.ele_delete_after();
+            });
         });
     },
 
