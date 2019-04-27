@@ -119,6 +119,14 @@ op_dom = {
 }
 
 actions = {
+    /************
+     * Settings *
+     ************/
+    test_mode: false,
+
+    /*************
+     * Functions *
+     *************/
     add_listeners: function() {
         requirejs(['base/js/namespace', 'base/js/utils'], function (Jupyter, utils) {
             window.addEventListener('message', function(event){
@@ -126,7 +134,7 @@ actions = {
                 var msg = event.data.msg;
                 if(typeof(act) == "undefined") return;
                 // For test
-                console.log("the iframe get: " + act + " " + msg);
+                if(actions.test_mode) console.log("the iframe get: " + act + " " + msg);
                 // Switch to the event
                 if(act == 'save-notebook') {
                     Jupyter.notebook.save_notebook();
@@ -176,7 +184,7 @@ actions = {
                     op_dom.ele_delete_after();
                 }
                 else{
-                    console.log("Unrecognized command!");
+                    if(actions.test_mode) console.log("Unrecognized command!");
                 }
                 // window.parent.postMessage("data from iframe extension", '*');
             }, false);
@@ -258,6 +266,6 @@ define(['base/js/namespace'], function(Jupyter){
     Jupyter._target = '_self';
 });
 
-$(document).ready(function(){
+window.onload = function(){
     op_dom.ele_delete_after();
-});
+};
