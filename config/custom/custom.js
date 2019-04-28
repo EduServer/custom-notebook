@@ -191,9 +191,16 @@ actions = {
         });
     },
 
+    post_notebooksaved: function() {
+        var data = {'actions': 'notebook-saved', 'msg': ""};
+        window.parent.postMessage(data, '*');
+    },
+
     init: function() {
         requirejs(['base/js/events'], function (events) {
             events.one('kernel_connected.Kernel', actions.add_listeners);
+            // After saving notebooks, post message to other origin
+            events.one('notebook_saved.Notebook', actions.post_notebooksaved);
         });
     },
 }
