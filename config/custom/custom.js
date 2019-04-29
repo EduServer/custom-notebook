@@ -155,7 +155,7 @@ actions = {
                     var ncs = Jupyter.notebook.ncells();
                     for (var i = 0; i < ncs; i++) {
                         icell = Jupyter.notebook.get_cell(i);
-                        if (icell.cell_type == 'markdown' && icell.inner_cell[0].innerText().includes(msg)) {
+                        if (icell.cell_type == 'markdown' && icell.inner_cell[0].innerText.includes(msg)) {
                             Jupyter.notebook.scroll_to_cell(i);
                             break;
                         }
