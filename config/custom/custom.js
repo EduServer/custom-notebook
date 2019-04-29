@@ -196,6 +196,16 @@ actions = {
         window.parent.postMessage(data, '*');
     },
 
+    post_modalshown: function() {
+        var data = {'actions': 'modal-shown', 'msg': ""};
+        window.parent.postMessage(data, '*');
+    },
+
+    post_modalhide: function() {
+        var data = {'actions': 'modal-hide', 'msg': ""};
+        window.parent.postMessage(data, '*');
+    },
+
     init: function() {
         requirejs(['base/js/events'], function (events) {
             events.one('kernel_idle.Kernel', actions.add_listeners);
@@ -269,6 +279,21 @@ actions.init();
 
 navbar.init();
 
+/////////////////////////////////////////////////////////////
+/**
+    Define functions (override official version)
+**/
+/////////////////////////////////////////////////////////////
 define(['base/js/namespace'], function(Jupyter){
     Jupyter._target = '_self';
+});
+
+define(['base/js/dialog'], function(dialog){
+    dialog.modal.on("shown.bs.modal", function () {
+        actions.post_modalshown();
+    });
+
+    dialog.modal.on("hide.bs.modal", function () {
+        actions.post_modalhide();
+    });
 });
