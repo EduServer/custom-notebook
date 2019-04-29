@@ -191,6 +191,16 @@ actions = {
         });
     },
 
+    add_modal_listeners: function() {
+        $("body").on("shown.bs.modal", function () {
+            actions.post_modalshown();
+        });
+
+        $("body").on("hide.bs.modal", function () {
+            actions.post_modalhide();
+        });
+    },
+
     post_notebooksaved: function() {
         var data = {'actions': 'notebook-saved', 'msg': ""};
         window.parent.postMessage(data, '*');
@@ -207,6 +217,8 @@ actions = {
     },
 
     init: function() {
+        actions.add_modal_listeners();
+
         requirejs(['base/js/events'], function (events) {
             events.one('kernel_idle.Kernel', actions.add_listeners);
             // First build notebook-saved events
@@ -284,123 +296,6 @@ navbar.init();
     Define functions (override official version)
 **/
 /////////////////////////////////////////////////////////////
-// Modal actions Broadcast
-define(['base/js/dialog'], ['jquery',
-    'codemirror/lib/codemirror',
-    'bootstrap',
-    'base/js/i18n'], function($, CodeMirror, bs, i18n, dialog){
-    var new_modal = function (options) {
-
-        var modal = $("<div/>")
-            .addClass("modal")
-            .addClass("fade")
-            .attr("role", "dialog");
-        var dialog = $("<div/>")
-            .addClass("modal-dialog")
-            .appendTo(modal);
-        var dialog_content = $("<div/>")
-            .addClass("modal-content")
-            .appendTo(dialog);
-        if(typeof(options.body) === 'string' && options.sanitize !== false){
-            options.body = $("<p/>").text(options.body);
-        }
-        dialog_content.append(
-            $("<div/>")
-                .addClass("modal-header")
-                .mousedown(function() {
-                  $(".modal").draggable({handle: '.modal-header'});
-                })
-                .append($("<button>")
-                    .attr("type", "button")
-                    .addClass("close")
-                    .attr("data-dismiss", "modal")
-                    .attr("aria-hidden", "true")
-                    .html("&times;")
-                ).append(
-                    $("<h4/>")
-                        .addClass('modal-title')
-                        .text(options.title || "")
-                )
-        ).append(
-            $("<div/>")
-                .addClass("modal-body")
-                .append(
-                    options.body || $("<p/>")
-                )
-        );
-        
-        var footer = $("<div/>").addClass("modal-footer");
-        
-        var default_button;
-        
-        for (var label in options.buttons) {
-            var btn_opts = options.buttons[label];
-            var button = $("<button/>")
-                .addClass("btn btn-default btn-sm")
-                .attr("data-dismiss", "modal")
-                .text(i18n.msg.translate(label).fetch());
-            if (btn_opts.id) {
-                button.attr('id', btn_opts.id);
-            }
-            if (btn_opts.click) {
-                button.click($.proxy(btn_opts.click, dialog_content));
-            }
-            if (btn_opts.class) {
-                button.addClass(btn_opts.class);
-            }
-            footer.append(button);
-            if (options.default_button && label === options.default_button) {
-                default_button = button;
-            }
-        }
-        if (!options.default_button) {
-            default_button = footer.find("button").last();
-        }
-        dialog_content.append(footer);
-        // hook up on-open event
-        modal.on("shown.bs.modal", function () {
-            actions.post_modalshown();
-            setTimeout(function () {
-                default_button.focus();
-                if (options.open) {
-                    $.proxy(options.open, modal)();
-                }
-            }, 0);
-        });
-        
-        // destroy modal on hide, unless explicitly asked not to
-        if (options.destroy === undefined || options.destroy) {
-            modal.on("hidden.bs.modal", function () {
-                modal.remove();
-            });
-        }
-        modal.on("hidden.bs.modal", function () {
-            actions.post_modalhide();
-            if (options.notebook) {
-                var cell = options.notebook.get_selected_cell();
-                if (cell) cell.select();
-            }
-            if (options.keyboard_manager) {
-                options.keyboard_manager.enable();
-                options.keyboard_manager.command_mode();
-            }
-        });
-        
-        if (options.keyboard_manager) {
-            options.keyboard_manager.disable();
-        }
-        
-        if(options.backdrop === undefined){
-          options.backdrop = 'static';
-        }
-        
-        return modal.modal(options);
-    };
-
-    dialog.modal = new_modal;
-
-});
-
 define(['base/js/namespace'], function(Jupyter){
     Jupyter._target = '_self';
 });
