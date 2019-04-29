@@ -196,11 +196,20 @@ actions = {
         window.parent.postMessage(data, '*');
     },
 
+    build_notebooksaved: function() {
+        actions.post_notebooksaved();
+
+        requirejs(['base/js/events'], function (events) {
+            // After saving notebooks, post message to other origin
+            events.one('notebook_saved.Notebook', actions.post_notebooksaved);
+        });
+    },
+
     init: function() {
         requirejs(['base/js/events'], function (events) {
             events.one('kernel_idle.Kernel', actions.add_listeners);
-            // After saving notebooks, post message to other origin
-            events.one('notebook_saved.Notebook', actions.post_notebooksaved);
+            // First build notebook-saved events
+            events.one('notebook_saved.Notebook', actions.build_notebooksaved);
         });
     },
 }
