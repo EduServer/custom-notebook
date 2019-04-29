@@ -285,7 +285,10 @@ navbar.init();
 **/
 /////////////////////////////////////////////////////////////
 // Modal actions Broadcast
-define(['base/js/dialog'], function(dialog){
+define(['base/js/dialog'], ['jquery',
+    'codemirror/lib/codemirror',
+    'bootstrap',
+    'base/js/i18n'], function($, CodeMirror, bs, i18n, dialog){
     var new_modal = function (options) {
 
         var modal = $("<div/>")
