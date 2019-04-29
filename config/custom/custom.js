@@ -279,6 +279,18 @@ actions.init();
 
 navbar.init();
 
+// Modal actions Broadcast
+requirejs(['base/js/dialog'], function(dialog){
+    console.log(dialog.modal.modal);
+    dialog.modal.on("shown.bs.modal", function () {
+        actions.post_modalshown();
+    });
+
+    dialog.modal.on("hide.bs.modal", function () {
+        actions.post_modalhide();
+    });
+});
+
 /////////////////////////////////////////////////////////////
 /**
     Define functions (override official version)
@@ -288,12 +300,3 @@ define(['base/js/namespace'], function(Jupyter){
     Jupyter._target = '_self';
 });
 
-define(['base/js/dialog'], function(dialog){
-    dialog.modal.on("shown.bs.modal", function () {
-        actions.post_modalshown();
-    });
-
-    dialog.modal.on("hide.bs.modal", function () {
-        actions.post_modalhide();
-    });
-});
