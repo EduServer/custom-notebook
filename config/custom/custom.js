@@ -94,7 +94,30 @@ op_dom = {
     ele_delete: function() {
         if(!op_dom.is_active) return;
         // Buttons in `file`
-        $("#file_menu").parent().remove();
+        $("#file_menu .divider").remove();
+        $("#new_notebook").remove();
+        $("#open_notebook").remove();
+        $("#copy_notebook").remove();
+        $("#save_notebook_as").remove();
+        $("#rename_notebook").remove();
+        $("#save_checkpoint").remove();
+        $("#restore_checkpoint").remove();
+        $("#print_preview").remove();
+        $("#trust_notebook").remove();
+        $("#close_and_halt").remove();
+        // Buttons in `download`
+        // only reserve the follows
+        var valid_list = ["download_ipynb", "download_html", "download_script", "download_pdf"];
+        var flag = [false, false, false, false];
+        $("#download_menu").find("li").each(function() {
+            var id_name = $(this).attr("id");
+            var idx = -1
+            for(i = 0;i < valid_list.length;i ++) {
+                if(!flag[i] && valid_list[i] == id_name) idx = i;
+            } 
+            if(idx == -1) $(this).remove();
+            else flag[idx] = true;
+        });
         // Buttons in `view`
         $("#toggle_header").remove();
         // Buttons in `help`
@@ -216,8 +239,17 @@ actions = {
         window.parent.postMessage(data, '*');
     },
 
+    disable_nb_autosave: function() {
+        requirejs(['base/js/namespace'], function (Jupyter) {
+            Jupyter.notebook.set_autosave_interval(0);
+        });
+    },
+
     init: function() {
+        // add modal listeners
         actions.add_modal_listeners();
+        // disable automatic saving
+        actions.disable_nb_autosave();
 
         requirejs(['base/js/events'], function (events) {
             events.one('kernel_idle.Kernel', actions.add_listeners);
