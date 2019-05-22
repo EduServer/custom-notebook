@@ -100,7 +100,6 @@ op_dom = {
         $("#copy_notebook").remove();
         $("#save_notebook_as").remove();
         $("#rename_notebook").remove();
-        $("#save_checkpoint").remove();
         $("#restore_checkpoint").remove();
         $("#print_preview").remove();
         $("#trust_notebook").remove();
