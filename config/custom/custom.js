@@ -168,7 +168,11 @@ actions = {
                     Jupyter.notebook.scroll_to_bottom();
                 }
                 else if(act == 'shutdown-kernel') {
-                    Jupyter.notebook.shutdown_kernel();
+                    if(msg == "warning") Jupyter.notebook.shutdown_kernel();
+                    else if(msg == "no-warning") {
+                        var that = Jupyter.notebook;
+                        that.session.delete();
+                    }
                 }
                 else if(act == 'start-kernel') {
                     Jupyter.notebook.start_session();
