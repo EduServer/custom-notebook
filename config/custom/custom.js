@@ -97,9 +97,9 @@ op_dom = {
         $("#file_menu .divider").remove();
         $("#new_notebook").remove();
         $("#open_notebook").remove();
-        $("#copy_notebook").remove();
+        // $("#copy_notebook").remove();
         $("#save_notebook_as").remove();
-        $("#rename_notebook").remove();
+        // $("#rename_notebook").remove();
         $("#restore_checkpoint").remove();
         $("#print_preview").remove();
         $("#trust_notebook").remove();
