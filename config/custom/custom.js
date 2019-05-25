@@ -93,7 +93,7 @@ op_dom = {
 
     ele_delete: function() {
         if(!op_dom.is_active) return;
-        // Buttons in `file`
+        // Remove Some Buttons in `file`
         $("#file_menu .divider").remove();
         $("#new_notebook").remove();
         $("#open_notebook").remove();
@@ -104,6 +104,19 @@ op_dom = {
         $("#print_preview").remove();
         $("#trust_notebook").remove();
         $("#close_and_halt").remove();
+        // update Buttons named `copy_notebook` and `rename_notebook`
+        // unbind original events on buttons and 
+        // post msg to outer if it is clicked.
+        $("#copy_notebook").unbind("click");
+        $("#rename_notebook").unbind("click");
+        $("#copy_notebook").click(function(){
+            var data = {'actions': 'notebook-copy', 'msg': ""};
+            window.parent.postMessage(data, '*');
+        });
+        $("#rename_notebook").click(function(){
+            var data = {'actions': 'notebook-rename', 'msg': ""};
+            window.parent.postMessage(data, '*');
+        });
         // Buttons in `download`
         // only reserve the follows
         var valid_list = ["download_ipynb", "download_html", "download_script", "download_pdf"];
