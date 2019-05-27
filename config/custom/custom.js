@@ -93,13 +93,14 @@ op_dom = {
 
     ele_delete: function() {
         if(!op_dom.is_active) return;
-        // Remove Some Buttons in `file`
+        
+    // Remove Some Buttons in `file`
         $("#file_menu .divider").remove();
         $("#new_notebook").remove();
         $("#open_notebook").remove();
-        // $("#copy_notebook").remove();
+        $("#copy_notebook").remove();
         $("#save_notebook_as").remove();
-        // $("#rename_notebook").remove();
+        $("#rename_notebook").remove();
         $("#restore_checkpoint").remove();
         $("#print_preview").remove();
         $("#trust_notebook").remove();
@@ -117,10 +118,11 @@ op_dom = {
             var data = {'actions': 'notebook-rename', 'msg': ""};
             window.parent.postMessage(data, '*');
         });
+
         // Buttons in `download`
         // only reserve the follows
         var valid_list = ["download_ipynb", "download_html", "download_script", "download_pdf"];
-        var flag = [false, false, false, false];
+        var flag = [false, false, false, true];
         $("#download_menu").find("li").each(function() {
             var id_name = $(this).attr("id");
             var idx = -1
@@ -137,6 +139,11 @@ op_dom = {
         $("#keyboard_shortcuts").remove();
         $("#edit_keyboard_shortcuts").remove();
         $("#help_menu").children()[0].remove();
+    //$("#notification_trusted").remove();
+    $("#notification_area").remove();
+
+
+    
     },
 
     ele_delete_after: function() {
@@ -296,7 +303,7 @@ navbar = {
         for (i = 0; i < hs.length; i ++) {
             x = hs[i];
             level = parseInt(x.tagName.substr(1));
-            txt = "<li class='step'><a href='javascript:void(0)' class='list-group-item'>" + x.innerText.replace(/¶$/, '') + "</a></li>";
+            txt = "<li class='step'><a class='stepTitle' href='javascript:void(0)' title='" + x.innerText.replace(/¶$/, '')  + "'>" + x.innerText.replace(/¶$/, '') + "</a><a href='javascript:void(0)' title='播放视频' class='stepBtn'><span class='glyphicon glyphicon-play-circle'></span></a><a href='javascript:void(0)' title='删除视频' class='stepBtn'><span class='glyphicon glyphicon glyphicon-minus'></span></a><a href='javascript:void(0)' title='添加视频'  class='stepBtn'><span class='glyphicon glyphicon glyphicon-plus'></span></a></li>";
             diff = level - prev_level;
             for (j = 0;j < diff; j ++) {
                 txt = open_tag + txt;
@@ -346,4 +353,4 @@ navbar.init();
 /////////////////////////////////////////////////////////////
 define(['base/js/namespace'], function(Jupyter){
     Jupyter._target = '_self';
-});
+});            
