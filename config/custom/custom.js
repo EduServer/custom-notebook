@@ -94,7 +94,7 @@ op_dom = {
     ele_delete: function() {
         if(!op_dom.is_active) return;
         
-    // Remove Some Buttons in `file`
+        // Remove Some Buttons in `file`
         $("#file_menu .divider").remove();
         $("#new_notebook").remove();
         $("#open_notebook").remove();
@@ -139,11 +139,8 @@ op_dom = {
         $("#keyboard_shortcuts").remove();
         $("#edit_keyboard_shortcuts").remove();
         $("#help_menu").children()[0].remove();
-    //$("#notification_trusted").remove();
-    $("#notification_area").remove();
-
-
-    
+        //$("#notification_trusted").remove();
+        $("#notification_area").remove();
     },
 
     ele_delete_after: function() {
@@ -353,4 +350,4 @@ navbar.init();
 /////////////////////////////////////////////////////////////
 define(['base/js/namespace'], function(Jupyter){
     Jupyter._target = '_self';
-});            
+});
